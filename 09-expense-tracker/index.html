@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #ecf0f1; }
+        .container { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 500px; max-height: 90vh; overflow-y: auto; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .balance { background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 10px; color: #fff; text-align: center; margin-bottom: 20px; }
+        .balance h3 { font-size: 14px; opacity: 0.8; margin-bottom: 5px; }
+        .balance h1 { font-size: 28px; margin: 0; color: #fff; }
+        .summary { display: flex; gap: 10px; margin-bottom: 20px; }
+        .summary > div { flex: 1; padding: 15px; border-radius: 8px; text-align: center; }
+        .income { background: #d4edda; color: #155724; }
+        .expense { background: #f8d7da; color: #721c24; }
+        .summary h3 { font-size: 12px; margin-bottom: 5px; }
+        .summary h2 { font-size: 20px; }
+        .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input, select { flex: 1; padding: 10px; border: 2px solid #ddd; border-radius: 5px; }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        button { padding: 10px 20px; background: #667eea; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #5568d3; }
+        .transactions { max-height: 300px; overflow-y: auto; }
+        .transaction { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f9f9f9; border-radius: 5px; margin-bottom: 8px; border-left: 4px solid #ddd; }
+        .transaction.income { border-left-color: #27ae60; }
+        .transaction.expense { border-left-color: #e74c3c; }
+        .transaction-info { flex: 1; }
+        .transaction-info .desc { font-weight: bold; }
+        .transaction-info .cat { font-size: 12px; color: #888; }
+        .transaction-info .amount { font-weight: bold; }
+        .delete-btn { background: #e74c3c; padding: 5px 10px; margin-left: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <div class="balance"><h3>Total Balance</h3><h1 id="balance">$0.00</h1></div>
+        <div class="summary">
+            <div class="income"><h3>Income</h3><h2 id="income">+$0.00</h2></div>
+            <div class="expense"><h3>Expenses</h3><h2 id="expense">-$0.00</h2></div>
+        </div>
+        <div class="form-group">
+            <input type="text" id="desc" placeholder="Description">
+            <input type="number" id="amount" placeholder="Amount" step="0.01">
+            <select id="category">
+                <option value="food">Food</option>
+                <option value="salary">Salary</option>
+                <option value="rent">Rent</option>
+                <option value="shopping">Shopping</option>
+                <option value="bills">Bills</option>
+                <option value="other">Other</option>
+            </select>
+            <select id="type">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+            </select>
+            <button onclick="addTransaction()">Add</button>
+        </div>
+        <h3 style="margin-bottom: 10px;">History</h3>
+        <div class="transactions" id="list"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
