@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stopwatch</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e, #16213e); }
+        .stopwatch { background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); text-align: center; width: 380px; }
+        h1 { color: #333; margin-bottom: 30px; }
+        .time { font-size: 56px; font-weight: bold; color: #e94560; font-family: monospace; margin: 20px 0; letter-spacing: 3px; }
+        .ms { font-size: 28px; color: #666; }
+        .buttons { display: flex; gap: 10px; justify-content: center; margin: 25px 0 15px; }
+        button { padding: 12px 30px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; color: #fff; transition: 0.2s; }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        #startBtn { background: #27ae60; }
+        #stopBtn { background: #e74c3c; }
+        #resetBtn { background: #3498db; }
+        #lapBtn { background: #f39c12; }
+        .laps { margin-top: 20px; max-height: 200px; overflow-y: auto; }
+        .lap-item { padding: 8px 15px; background: #f4f4f4; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; font-family: monospace; }
+        .lap-item:first-child { background: #fff3cd; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="stopwatch">
+        <h1>Stopwatch</h1>
+        <div class="time"><span id="time">00:00:00</span><span class="ms" id="ms">.00</span></div>
+        <div class="buttons">
+            <button id="startBtn" onclick="start()">Start</button>
+            <button id="stopBtn" onclick="stop()" disabled>Stop</button>
+            <button id="resetBtn" onclick="reset()">Reset</button>
+        </div>
+        <button id="lapBtn" onclick="lap()" disabled>Lap</button>
+        <div class="laps" id="laps"></div>
+    </div>
+    <script>
+        let startTime, interval, elapsed = 0, running = false, lapCount = 0;
+        function start() {
+            if (running) return;
+            running = true;
+            startTime = Date.now() - elapsed;
+            interval = setInterval(update, 10);
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('lapBtn').disabled = false;
+        }
+        function stop() {
+            if (!running) return;
+            running = false;
+            clearInterval(interval);
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('lapBtn').disabled = true;
+        }
+        function reset() {
+            stop();
+            elapsed = 0; lapCount = 0;
+            document.getElementById('time').textContent = '00:00:00';
+            document.getElementById('ms').textContent = '.00';
+            document.getElementById('laps').innerHTML = '';
+        }
+        function update() {
+            elapsed = Date.now() - startTime;
+            document.getElementById('time').textContent = formatTime(elapsed);
+            document.getElementById('ms').textContent = '.' + String(Math.floor((elapsed % 1000) / 10)).padStart(2, '0');
+        }
+        function formatTime(ms) {
+            const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000), s = Math.floor((ms % 60000) / 1000);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
+        function lap() {
+            lapCount++;
+            const div = document.createElement('div');
+            div.className = 'lap-item';
+            div.innerHTML = `<span>Lap ${lapCount}</span><span>${document.getElementById('time').textContent}${document.getElementById('ms').textContent}</span>`;
+            document.getElementById('laps').prepend(div);
+        }
+    </script>
+</body>
+</html>

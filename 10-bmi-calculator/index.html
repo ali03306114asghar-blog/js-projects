@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .container { background: #fff; padding: 35px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 420px; }
+        h1 { text-align: center; color: #333; margin-bottom: 25px; }
+        .input-group { margin-bottom: 18px; }
+        label { display: block; color: #555; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; transition: 0.2s; }
+        input:focus { outline: none; border-color: #43e97b; }
+        .unit-toggle { display: flex; gap: 10px; margin-bottom: 20px; background: #f0f0f0; padding: 5px; border-radius: 8px; }
+        .unit-toggle button { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; border-radius: 5px; font-weight: bold; color: #666; transition: 0.2s; }
+        .unit-toggle button.active { background: #43e97b; color: #fff; }
+        button.calc { width: 100%; padding: 14px; background: #43e97b; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: 10px; }
+        button.calc:hover { background: #38d96a; }
+        .result { margin-top: 25px; padding: 15px; border-radius: 10px; display: none; text-align: center; }
+        .result.show { display: block; }
+        .bmi-val { font-size: 42px; font-weight: bold; color: #333; }
+        .category { font-size: 18px; font-weight: bold; margin-top: 5px; }
+        .gauge { height: 10px; background: linear-gradient(to right, #3498db, #f1c40f, #e67e22, #e74c3c); border-radius: 5px; margin-top: 15px; position: relative; }
+        .pointer { position: absolute; top: -5px; width: 3px; height: 20px; background: #333; transform: translateX(-50%); transition: left 0.5s; }
+        .tips { margin-top: 20px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 14px; color: #555; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <div class="unit-toggle">
+            <button class="active" onclick="setUnit('metric', this)">Metric (kg/cm)</button>
+            <button onclick="setUnit('imperial', this)">Imperial (lb/ft)</button>
+        </div>
+        <div class="input-group"><label id="weightLabel">Weight (kg)</label><input type="number" id="weight" placeholder="Enter weight"></div>
+        <div class="input-group"><label id="heightLabel">Height (cm)</label><input type="number" id="height" placeholder="Enter height"></div>
+        <button class="calc" onclick="calculate()">Calculate BMI</button>
+        <div class="result" id="result">
+            <div class="bmi-val" id="bmiVal"></div>
+            <div class="category" id="category"></div>
+            <div class="gauge"><div class="pointer" id="pointer"></div></div>
+            <div class="tips" id="tips"></div>
+        </div>
+    </div>
+    <script>
+        let unit = 'metric';
+        function setUnit(u, btn) {
+            unit = u;
+            document.querySelectorAll('.unit-toggle button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (u === 'metric') {
+                document.getElementById('weightLabel').textContent = 'Weight (kg)';
+                document.getElementById('heightLabel').textContent = 'Height (cm)';
+                document.getElementById('weight').placeholder = 'Enter weight in kg';
+                document.getElementById('height').placeholder = 'Enter height in cm';
+            } else {
+                document.getElementById('weightLabel').textContent = 'Weight (lbs)';
+                document.getElementById('heightLabel').textContent = 'Height (inches)';
+                document.getElementById('weight').placeholder = 'Enter weight in lbs';
+                document.getElementById('height').placeholder = 'Enter height in inches';
+            }
+            document.getElementById('result').classList.remove('show');
+        }
+        function calculate() {
+            let weight = parseFloat(document.getElementById('weight').value);
+            let height = parseFloat(document.getElementById('height').value);
+            if (!weight || !height || weight <= 0 || height <= 0) { alert('Please enter valid values!'); return; }
+            if (unit === 'imperial') { height = height * 2.54; weight = weight * 0.453592; }
+            height = height / 100;
+            const bmi = weight / (height * height);
+            showResult(bmi);
+        }
+        function showResult(bmi) {
+            let cat, color, tip, pos;
+            if (bmi < 18.5) { cat = 'Underweight'; color = '#3498db'; tip = 'Consider consulting a nutritionist. Increase caloric intake with nutrient-rich foods.'; pos = 12.5; }
+            else if (bmi < 25) { cat = 'Normal Weight'; color = '#27ae60'; tip = 'Great job! Maintain a balanced diet and regular exercise.'; pos = 37.5; }
+            else if (bmi < 30) { cat = 'Overweight'; color = '#f39c12'; tip = 'Consider increasing physical activity and monitoring your diet.'; pos = 62.5; }
+            else if (bmi < 35) { cat = 'Obese (Class I)'; color = '#e67e22'; tip = 'It is recommended to seek guidance from a healthcare provider.'; pos = 77.5; }
+            else { cat = 'Obese (Class II+)'; color = '#e74c3c'; tip = 'Please consult a healthcare professional for a personalized plan.'; pos = 87.5; }
+            document.getElementById('bmiVal').textContent = bmi.toFixed(1);
+            document.getElementById('bmiVal').style.color = color;
+            document.getElementById('category').textContent = cat;
+            document.getElementById('category').style.color = color;
+            document.getElementById('pointer').style.left = Math.min(pos, 95) + '%';
+            document.getElementById('tips').textContent = tip;
+            document.getElementById('result').classList.add('show');
+        }
+    </script>
+</body>
+</html>

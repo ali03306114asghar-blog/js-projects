@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .container { background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 350px; text-align: center; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .search { display: flex; gap: 10px; margin-bottom: 20px; }
+        #cityInput { flex: 1; padding: 10px; border: 2px solid #667eea; border-radius: 5px; font-size: 16px; }
+        button { padding: 10px 20px; background: #667eea; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #5a6fd6; }
+        .weather { display: none; }
+        .city { font-size: 28px; color: #333; }
+        .temp { font-size: 48px; color: #e74c3c; font-weight: bold; margin: 10px 0; }
+        .desc { font-size: 20px; color: #555; text-transform: capitalize; }
+        .details { display: flex; justify-content: space-around; margin-top: 20px; }
+        .detail { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div class="search">
+            <input type="text" id="cityInput" placeholder="Enter city name">
+            <button onclick="getWeather()">Search</button>
+        </div>
+        <div class="weather" id="weatherInfo">
+            <div class="city" id="city"></div>
+            <div class="temp" id="temp"></div>
+            <div class="desc" id="desc"></div>
+            <div class="details">
+                <div class="detail">Humidity: <span id="humidity"></span>%</div>
+                <div class="detail">Wind: <span id="wind"></span> km/h</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const weatherData = {
+            "karachi": { temp: 32, desc: "sunny", humidity: 65, wind: 18 },
+            "lahore": { temp: 36, desc: "hot", humidity: 45, wind: 12 },
+            "islamabad": { temp: 25, desc: "partly cloudy", humidity: 55, wind: 10 },
+            "london": { temp: 15, desc: "rainy", humidity: 80, wind: 20 },
+            "new york": { temp: 22, desc: "cloudy", humidity: 60, wind: 15 },
+            "tokyo": { temp: 28, desc: "clear sky", humidity: 70, wind: 8 },
+            "dubai": { temp: 40, desc: "very hot", humidity: 30, wind: 15 },
+            "paris": { temp: 18, desc: "overcast", humidity: 75, wind: 12 }
+        };
+        function getWeather() {
+            const city = document.getElementById('cityInput').value.trim().toLowerCase();
+            const weather = weatherData[city];
+            const display = document.getElementById('weatherInfo');
+            if (weather) {
+                document.getElementById('city').textContent = city.charAt(0).toUpperCase() + city.slice(1);
+                document.getElementById('temp').textContent = weather.temp + '°C';
+                document.getElementById('desc').textContent = weather.desc;
+                document.getElementById('humidity').textContent = weather.humidity;
+                document.getElementById('wind').textContent = weather.wind;
+                display.style.display = 'block';
+            } else {
+                document.getElementById('weatherInfo').style.display = 'none';
+                alert('City not found! Try: Karachi, Lahore, Islamabad, London, New York, Tokyo, Dubai, Paris');
+            }
+        }
+        document.getElementById('cityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') getWeather();
+        });
+    </script>
+</body>
+</html>
