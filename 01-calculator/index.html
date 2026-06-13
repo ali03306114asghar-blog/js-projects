@@ -43,14 +43,6 @@
             <button class="operator" style="grid-column: span 2;" onclick="calculate()">=</button>
         </div>
     </div>
-    <script>
-        const display = document.getElementById('display');
-        function appendValue(val) { display.value += val; }
-        function clearDisplay() { display.value = ''; }
-        function calculate() {
-            try { display.value = eval(display.value); }
-            catch { display.value = 'Error'; }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
